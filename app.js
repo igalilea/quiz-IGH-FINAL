@@ -11,6 +11,7 @@ var session = require('express-session');
 var routes = require('./routes/index');
 
 var app = express();
+var enSesion = false;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -43,6 +44,27 @@ app.use(function(req, res, next) {
 
     // Hacer visible req.session en las vistas
     res.locals.session = req.session;
+    next();
+});
+
+// Control tiempo de sesión
+app.use(function(req, res, next){
+
+    if(req.session.user && !enSesion) {
+        app.locals.time = Date.now();
+        enSesion = true;
+        
+    } else if (req.session.user && enSesion) {
+        app.locals.diferencia = (Date.now() - app.locals.time)/1000;
+
+        if (app.locals.diferencia < 120) {
+            app.locals.time = Date.now();
+        
+        } else {
+            req.session.user = undefined;
+            enSesion = false;
+        }
+    }
     next();
 });
 
