@@ -12,3 +12,9 @@
 <select> <br />
 <a href="/quizes"><button type="button">Cancelar</button></a>
 <input type="submit" value="Salvar">
+
+<script type="text/javascript">
+    var tema="<%= quiz.indice %>";
+    tema= tema === "undefined" ? "Otro" : tema;
+    document.getElementById("ind").value = tema;
+</script>
